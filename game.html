@@ -1,0 +1,207 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>
+            미사일 피하기
+        </title>
+        <script src="./js/phaser.min.js"></script>
+
+
+    </head>
+
+    <body>
+            <script type="text/javascript">
+            window.onload = function() {
+                var screenWidth = 1080;
+                var screenHeight = 1920;
+                
+                var game = new Phaser.Game(screenWidth,screenHeight,Phaser.CANVAS, null);
+            //,{preload:preload, create:create, update:update}); 
+                game.state.add('Boot', Game.Boot);
+                game.state.add('Boot', Game.Boot);
+                game.state.add('Boot', Game.Boot);
+                game.state.add('Boot', Game.Boot);
+
+            }
+
+
+
+
+            var resizeGame = this._fitScreen = function() {
+                // calculates aspect ratio of the game
+                var gameAspRatio = mt.data.map.viewportWidth / mt.data.map.viewportHeight;
+                // calculates aspect ratio of the device
+                var deviceAspRatio = window.innerWidth / window.innerHeight;
+                var ratioDiv = gameAspRatio / deviceAspRatio;
+                var screenWidth = 1080;
+                var screenHeight = 1920;
+
+                // if the screen is too narrow                
+                //if (game.device.desktop) {                    
+
+                //} else {
+                    game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
+                    game.scale.pageAlignHorizontally = true;
+                    game.scale.pageAlignVetically = true;
+
+                //}
+            };
+            var screenWidth = 1080;
+            var screenHeight = 1920;
+
+                var game = new Phaser.Game(screenWidth,screenHeight,Phaser.CANVAS,null,
+            {preload:preload, create:create, update:update});            
+
+            var box, player, inputkey, bullet, bulletAlive, score, score_Event, gameover_Text, life;
+            var spaceImage;
+            
+            var playerLife = 2;
+            var score_num = 0;
+            var bulletArray=[]; 
+            var bulletCnt = 30;
+
+            function preload() {
+                game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
+                game.scale.pageAlignHorizontally = true;
+                game.scale.pageAlignVetically = true;
+                game.load.image("box", "./image/box.png");
+                game.load.image("player", "./image/player.png");
+                game.load.image("bullet", "./image/bullet.png");
+                game.load.image("life", "./image/heart2.png");
+                game.load.image("spaceBack", "./image/space.png");
+            }
+            
+            function create() {
+                game.physics.startSystem(Phaser.Physics.ARCADE);
+                
+                spaceImage = game.add.sprite(0,0,'spaceBack');
+                spaceImage.x = 0;              
+                spaceImage.y = 0;
+                spaceImage.height = game.height;
+                spaceImage.width = game.width;
+
+                game.stage.backgroundColor="#ffffff";
+                game.create.texture('score',['C'], 800, 80, 0);
+                game.add.sprite(0,0,'score');
+
+                score=game.add.group();
+                score.enableBody = true;
+                score.create(0,0, "score");
+
+                box = game.add.group();
+                box.enableBody = true;
+                
+                player = game.add.sprite(screenWidth / 2 , screenHeight / 2, "player");
+                //player.height = 100;
+                //player.width = 100;
+                game.physics.arcade.enable(player);
+
+                inputkey = game.input.keyboard.createCursorKeys();  // 방향키이벤트
+                var barrierWidth = screenWidth / 20;
+                var barrierHeigth = screenHeight / 20;
+                
+                for (var i = 0 ; i < barrierWidth ; i++) {
+                    box.create(i*20, 80,"box").body.immovable = true; // 위쪽에 box 생성 및 고정
+                    box.create(i*20, screenHeight-20,"box").body.immovable = true; // 아래쪽에 box 생성 및 고정
+                    
+                }
+                for (var i = 4 ; i < (barrierHeigth - 1) ; i++) {
+                    box.create(10,i*20,"box").body.immovable = true; // 왼쪽에 box 생성 및 고정
+                    box.create(screenWidth-20,i*20,"box").body.immovable = true; // 오른쪽에 box 생성 및 고정
+                }
+
+                life = game.add.group();
+                life.enableBody = true;
+                life.physicsBodyType = Phaser.Physics.ARCADE;
+                life.createMultiple(playerLife, "life");
+                life.setAll("outOfBoundsKill", true);
+                life.setAll("checkWorldBounds", true);
+                for(var i = playerLife ; i > 0 ; i--) {
+                    life.create(screenWidth-i*20, 60,"life").body.immovable = true;
+                }
+                    
+                bullet = game.add.group();
+                bullet.enableBody = true;
+                bullet.physicsBodyType = Phaser.Physics.ARCADE;
+                bullet.createMultiple(bulletCnt, "bullet");
+                bullet.setAll("outOfBoundsKill", true);
+                
+                bullet.setAll("checkWorldBounds", true);
+
+                var score_text = game.add.text(20,10, "SCORE 0", {fontSize:"50px", fill:"#ffffff"});
+                score_Event = game.time.events.loop(Phaser.Timer.SECOND,
+                function() {score_num++; score_text.setText("SCORE "+score_num);}, this);
+
+                gameover_Text = game.add.text(game.world.centerX, game.world.centerY, "GAME OVER", 
+                    {fontSize:"80px", fill:"#ffffff"});
+                gameover_Text.anchor.setTo(0.5,0.5);
+                gameover_Text.visible = false;
+
+            }
+            
+            function update() {
+                game.physics.arcade.collide(player, box);
+                game.physics.arcade.overlap(score, bullet, function(sky,bullet) {
+                    bullet.kill();
+                }, null, this);
+
+                game.physics.arcade.overlap(player, bullet, function(player,bullet) {
+                    bullet.kill();
+                    playerLife--;
+                    life.kill();
+                }, null, this);
+
+                var velocity = 200;
+
+                player.body.velocity.setTo(0,0);
+
+                if (playerLife <1) { 
+                    game.time.events.remove(score_Event);
+                    gameover_Text.visible = true;
+                    return;
+                }
+
+                if (inputkey.left.isDown && inputkey.up.isDown) {
+                    player.body.velocity.x = -velocity;
+                    player.body.velocity.y = -velocity;
+                } else if (inputkey.left.isDown && inputkey.down.isDown) {
+                    player.body.velocity.x = -velocity;
+                    player.body.velocity.y = +velocity;
+                } else if (inputkey.right.isDown && inputkey.up.isDown) {
+                    player.body.velocity.x = +velocity;
+                    player.body.velocity.y = -velocity;
+                } else if (inputkey.right.isDown && inputkey.down.isDown) {
+                    player.body.velocity.x = +velocity;
+                    player.body.velocity.y = +velocity;
+                } else if (inputkey.left.isDown) {
+                    player.body.velocity.x = -velocity;
+                } else if (inputkey.right.isDown) { 
+                    player.body.velocity.x = +velocity;
+                } else if (inputkey.up.isDown) {                   
+                    player.body.velocity.y = -velocity;
+                } else if (inputkey.down.isDown) {
+                    player.body.velocity.y = +velocity;
+                }
+                
+                bulletAlive = bullet.getFirstExists(false);
+                bulletArray.length = 0;
+                box.forEachAlive(function(bulletAlive) {
+                    bulletArray.push(bulletAlive);
+                });
+                if (bulletAlive && bulletArray.length > 0) {
+                    var Rand = game.rnd.integerInRange(0, bulletArray.length-1);
+                    var bulletBox = bulletArray[Rand];
+                    bulletAlive.reset(bulletBox.body.x, bulletBox.body.y);
+                    game.physics.arcade.moveToObject(bulletAlive, player, 150);
+                }
+
+            }
+                
+                
+                
+            
+            </script>
+    </body>
+
+</html>
