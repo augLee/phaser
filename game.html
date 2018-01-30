@@ -6,7 +6,9 @@
             미사일 피하기
         </title>
         <script src="./js/phaser.min.js"></script>
-
+        <script src="./js/Boot.js"></script>
+        <script src="./js/Boot.js"></script>
+        <script src="./js/Boot.js"></script>
 
     </head>
 
@@ -25,32 +27,10 @@
 
                 game.state.start('Boot');
 
-            }
-
-
-
-
-            var resizeGame = this._fitScreen = function() {
-                // calculates aspect ratio of the game
-                var gameAspRatio = mt.data.map.viewportWidth / mt.data.map.viewportHeight;
-                // calculates aspect ratio of the device
-                var deviceAspRatio = window.innerWidth / window.innerHeight;
-                var ratioDiv = gameAspRatio / deviceAspRatio;
-                var screenWidth = 1080;
-                var screenHeight = 1920;
-
-                // if the screen is too narrow                
-                //if (game.device.desktop) {                    
-
-                //} else {
-                    game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
-                    game.scale.pageAlignHorizontally = true;
-                    game.scale.pageAlignVetically = true;
-
-                //}
             };
-            var screenWidth = 1080;
-            var screenHeight = 1920;
+
+            var screenWidth = 1020;
+            var screenHeight = 1980;
 
                 var game = new Phaser.Game(screenWidth,screenHeight,Phaser.CANVAS,null,
             {preload:preload, create:create, update:update});            
