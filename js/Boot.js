@@ -18,3 +18,15 @@ Game.Boot.prototype = {
         this.stage.start('PreLoader');
     }
 }
+
+//var Boot = {
+//    preload : function () {
+//
+//    },
+//    create : function () {
+//
+//    },
+//    startGame : function () {
+//
+//    }
+//};
