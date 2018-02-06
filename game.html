@@ -9,25 +9,15 @@
         <script src="./js/Boot.js"></script>
         <script src="./js/PreLoader.js"></script>
         <script src="./js/MainMenu.js"></script> 
-        <script src="./js/level1.js"></script>
+        <script src="./js/play.js"></script>
+        <script src="./js/game.js"></script>
 
     </head>
 
     <body>
+        <div id="gameDiv"></div>
             <script type="text/javascript">
-            window.onload = function() {
-                var screenWidth = 1080;
-                var screenHeight = 1920;
-                
-                var game = new Phaser.Game(screenWidth,screenHeight,Phaser.CANVAS, null);
             
-                game.state.add('Boot', Game.Boot);
-                game.state.add('PreLoader', Game.PreLoader);
-                game.state.add('MainMenu', Game.MainMenu);
-                game.state.add('level1', Game.level1);
-
-                game.state.start('Boot');
-            };
 
             //var screenWidth = 1020;
             //var screenHeight = 1980;

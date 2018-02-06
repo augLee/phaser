@@ -1,23 +1,22 @@
-Game.PreLoader = function(game) {
-    this.preloadBar = null;
-};
+var PreLoaderState = {
+    preload: function() {
+        var loadingLabel = game.add.text(80,150, 'loading...', );
 
-Game.PreLoader.prototype = {
-    preload:function() {
-        this.preloadBar = this.add.sprite(0,0,'preLoaderBar');
+        game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
+        game.scale.pageAlignHorizontally = true;
+        game.scale.pageAlignVertically = true;
+        game.stage.backgroundColor="#000000";
 
-        this.preloadBar.anchor.setTo(0.5,0.5);
-        this.time.advancedTiming = true;
-        this.load.setPreLoadSprite(this.preloadBar);
+        // load graphics image
 
-        // load all assets
-        
+        // load audio assets 
 
 
 
     },
 
-    create:function() {
-        this.state.start('level1');
+    create: function() {
+        game.state.start('MainMenu');
     }
-}
+
+};
