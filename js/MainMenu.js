@@ -11,7 +11,11 @@ var MainMenuState = {
         game.input.activePointer.capture = true;
     },
     tick: function() {
-        if (nameLabel.style)
+        if (nameLabel.alpha > 0.5) {
+            game.add.tween(nameLabel).to( {alpha: 0.1}, 1000, "Linear", true);
+        } else {
+            game.add.tween(nameLabel).to( {alpha: 1}, 1000, "Linear", true);
+        }
     },
     update:function() {
         //updateLoading(nameLabel);
