@@ -36,8 +36,16 @@ function func_input() {
 var playState = {
     preload:function() {
         game.stage.backgroundColor = "#ffffff";
+        
+        spaceImage = game.add.sprite(0,0,'spaceBack');
+        spaceImage.x = 0;              
+        spaceImage.y = 0;
+        spaceImage.height = game.height;
+        spaceImage.width = game.width;
+        
         game.create.texture('score',['C'], 800,80,0);
         game.add.sprite(0,0,'score');
+
 
         score = game.add.group();
         score.enableBody = true;
@@ -53,7 +61,7 @@ var playState = {
         
         player = game.add.sprite(game.world.centerX, game.world.centerY, "player");
         game.physics.arcade.enable(player);
-
+        player.body.collideWorldBounds = true;
         inputkey = game.input.keyboard.createCursorKeys();
 
         bullet = game.add.group();
