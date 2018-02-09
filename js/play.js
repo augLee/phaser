@@ -2,6 +2,8 @@
 var box, player, inputkey, bullet, bulletAlive, score, score_Event, gameover_Text, life;
 var spaceImage;
 
+var stone1, stone2,stone3;
+
 var playerLife = 2;
 var score_num = 0;
 var bulletArray=[]; 
@@ -41,24 +43,31 @@ var playState = {
         spaceImage.height = game.height;
         spaceImage.width = game.width;
         
-        //game.create.texture('score',['C'], 800,80,0);
+        game.create.texture('score',['C'], 800,80,0);
+        game.add.sprite(0,0,'score');
     },
 
     create: function() {
-        // player add
-        //box = game.add.group();
-        //box.enableBody = true;
-        
+        // player add        
         player = game.add.sprite(game.world.centerX, game.world.centerY, "player");
         game.physics.arcade.enable(player);
         player.body.collideWorldBounds = true;
         
-        //game.create.texture('score',['C'], 800,80,0);
-        //game.add.sprite(0,0,'score');
+        score = game.add.group();
+        score.enableBody = true;
+        score.create(0,0, "score");
 
-        //score = game.add.group();
-        //score.enableBody = true;
-        //score.create(0,0, "score");
+        box = game.add.group();
+        box.enableBody = true;
+
+        for (var i = 0; i < game.width/20; i++) {
+            box.create(i*20, 80,"box").body.immovable = true; // 위쪽에 box 생성 및 고정
+            box.create(i*20, game.height-20,"box").body.immovable = true; // 아래쪽에 box 생성 및 고정 
+        }
+        for (var i =4; i < game.height/20 -1 ; i++) {
+            box.create(10,i*20,"box").body.immovable = true; // 왼쪽에 box 생성 및 고정
+            box.create(game.width-20,i*20,"box").body.immovable = true; // 오른쪽에 box 생성 및 고정
+        }
 
         inputkey = game.input.keyboard.createCursorKeys();
 
@@ -81,7 +90,7 @@ var playState = {
     },
 
     update:function() {
-        //game.physics.arcade.collide(player, sky);
+        game.physics.arcade.collide(player, box);
         game.physics.arcade.overlap(score, bullet, function(sky, bullet) {
             bullet.kill();
         }, null, this);
@@ -103,17 +112,15 @@ var playState = {
 
         bulletAlive = bullet.getFirstExists(false);
         bulletArray.length = 0;
-        console.log(bulletAlive);
-
-
+        
+        box.forEachAlive(function(bulletAlive){
+            bulletArray.push(bulletAlive);
+        });
         if(bulletAlive && bulletArray.length > 0) {
-            var Rand = game.rnd.integetInRange(0, bulletArray.length -1);
-            var bulletBox = bulletArray(Rand);
+            var Rand = game.rnd.integerInRange(0, bulletArray.length -1);
+            var bulletBox = bulletArray[Rand];
             bulletAlive.reset(bulletBox.body.x, bulletBox.body.y);
             game.physics.arcade.moveToObject(bulletAlive, player, 150);
         }
-        
-
-
     }
 }

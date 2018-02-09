@@ -24,7 +24,10 @@ var PreLoaderState = {
         game.load.image("life", "./image/heart2.png");
         game.load.image("spaceBack", "./image/space.png");
         game.load.image("MainImage","./image/main.png");
-        
+
+        game.load.image("Stone1", "./image/stone1.png");        
+        game.load.image("Stone2", "./image/stone2.png");        
+        game.load.image("Stone3", "./image/stone3.png");
         // load audio assets 
 
 
