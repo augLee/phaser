@@ -38,20 +38,10 @@ var playState = {
         game.stage.backgroundColor = "#ffffff";
         
         spaceImage = game.add.sprite(0,0,'spaceBack');
-        spaceImage.x = 0;              
-        spaceImage.y = 0;
         spaceImage.height = game.height;
         spaceImage.width = game.width;
         
-        game.create.texture('score',['C'], 800,80,0);
-        game.add.sprite(0,0,'score');
-
-
-        score = game.add.group();
-        score.enableBody = true;
-        score.create(0,0, "score");
-
-
+        //game.create.texture('score',['C'], 800,80,0);
     },
 
     create: function() {
@@ -62,6 +52,14 @@ var playState = {
         player = game.add.sprite(game.world.centerX, game.world.centerY, "player");
         game.physics.arcade.enable(player);
         player.body.collideWorldBounds = true;
+        
+        //game.create.texture('score',['C'], 800,80,0);
+        //game.add.sprite(0,0,'score');
+
+        //score = game.add.group();
+        //score.enableBody = true;
+        //score.create(0,0, "score");
+
         inputkey = game.input.keyboard.createCursorKeys();
 
         bullet = game.add.group();
@@ -81,7 +79,6 @@ var playState = {
         gameover_Text.visible = false;
 
     },
-
 
     update:function() {
         //game.physics.arcade.collide(player, sky);
@@ -106,6 +103,9 @@ var playState = {
 
         bulletAlive = bullet.getFirstExists(false);
         bulletArray.length = 0;
+        console.log(bulletAlive);
+
+
         if(bulletAlive && bulletArray.length > 0) {
             var Rand = game.rnd.integetInRange(0, bulletArray.length -1);
             var bulletBox = bulletArray(Rand);
