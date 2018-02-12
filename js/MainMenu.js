@@ -7,7 +7,7 @@ var MainMenuState = {
         MainMenuBg.width = game.width;
     },
     create:function() {
-        var labelStyle = {font: 'bold 70px Space Mono', fill: '#000000', align: "center"};
+        var labelStyle = {font: 'bold 50px NanumGothic', fill: '#000000', align: "center"};
         
         nameLabel = game.add.text(game.world.centerX ,game.world.centerY + 150,"Click To Start", labelStyle);
         nameLabel.anchor.set(0.5);

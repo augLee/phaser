@@ -1,6 +1,9 @@
 // play.js
 var box, player, inputkey, bullet, bulletAlive, score, score_Event, gameover_Text, life;
 var spaceImage;
+var btn_restart;
+var bar;
+var score_txt;
 
 var stone1, stone2,stone3;
 
@@ -8,6 +11,9 @@ var playerLife = 2;
 var score_num = 0;
 var bulletArray=[]; 
 var bulletCnt = 30;
+var bulletMoveVelo = 150;
+
+
 
 function func_input() {
         var velocity = 200;
@@ -34,17 +40,32 @@ function func_input() {
                 player.body.velocity.y = +velocity;
             }
 }
+function btnUprestart() {
+    game.state.start('MainMenu');
+}
+
+function levelDesign() {    
+    score_num++; 
+    score_txt.setText("SCORE "+ score_num);
+    if (score_num %10 == 0) { 
+        bulletMoveVelo+=10; 
+        console.log(bulletMoveVelo); 
+    }
+}
 
 var playState = {
+    init:function() {
+        playerLife = 2;
+        score_num = 0;
+        bulletMoveVelo = 150;
+    },
     preload:function() {
-        game.stage.backgroundColor = "#ffffff";
+        game.stage.backgroundColor = "#000000";
         
         spaceImage = game.add.sprite(0,0,'spaceBack');
         spaceImage.height = game.height;
         spaceImage.width = game.width;
         
-        game.create.texture('score',['C'], 800,80,0);
-        game.add.sprite(0,0,'score');
     },
 
     create: function() {
@@ -53,10 +74,6 @@ var playState = {
         game.physics.arcade.enable(player);
         player.body.collideWorldBounds = true;
         
-        score = game.add.group();
-        score.enableBody = true;
-        score.create(0,0, "score");
-
         box = game.add.group();
         box.enableBody = true;
 
@@ -78,20 +95,27 @@ var playState = {
         bullet.setAll("outOfBoundsKill", true);
         bullet.setAll("checkWorldBounds", true);
 
-        var score_txt = game.add.text(20,10,"SCORE 0", {fontSize:"50px", fill:"#ffffff"});
-        score_Event = game.time.events.loop(Phaser.Timer.SECOND,
-        function() {score_num++; score_txt.setText("SCORE "+score_num);}, this);
+        bar = game.add.graphics();
+        bar.beginFill(0x000000, 0.1);
+        bar.drawRect(0, 0, game.width, 80);
 
-        gameover_Text = game.add.text(game.world.centerX, game.world.centerY, "GAME OVER", 
+        score_txt = game.add.text(20, 10,"SCORE 0", {fontSize:"50px", fill:"#ffffff"});
+        score_Event = game.time.events.loop(Phaser.Timer.SECOND, levelDesign, this);        
+
+        gameover_Text = game.add.text(game.world.centerX, game.world.centerY - 50, "GAME OVER", 
             {fontSize:"80px", fill:"#ffffff"});
         gameover_Text.anchor.setTo(0.5,0.5);
         gameover_Text.visible = false;
 
+        btn_restart = game.add.button(game.world.centerX, game.world.centerY + 50, 'btn_res', btnUprestart, this);
+        btn_restart.anchor.setTo(0.5,0.5);
+        btn_restart.scale.setTo(2,2);
+        btn_restart.visible = false;
     },
 
     update:function() {
         game.physics.arcade.collide(player, box);
-        game.physics.arcade.overlap(score, bullet, function(sky, bullet) {
+        game.physics.arcade.overlap(bar, bullet, function(bar, bullet) {
             bullet.kill();
         }, null, this);
 
@@ -105,10 +129,12 @@ var playState = {
         if (playerLife < 1) {
             game.time.events.remove(score_Event);
             gameover_Text.visible = true;
+            btn_restart.visible = true;
             return;
         }
 
         func_input();
+        //levelDesign();
 
         bulletAlive = bullet.getFirstExists(false);
         bulletArray.length = 0;
@@ -120,7 +146,7 @@ var playState = {
             var Rand = game.rnd.integerInRange(0, bulletArray.length -1);
             var bulletBox = bulletArray[Rand];
             bulletAlive.reset(bulletBox.body.x, bulletBox.body.y);
-            game.physics.arcade.moveToObject(bulletAlive, player, 150);
+            game.physics.arcade.moveToObject(bulletAlive, player, bulletMoveVelo);
         }
     }
 }

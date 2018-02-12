@@ -2,7 +2,7 @@
 
 var PreLoaderState = {
     preload: function() {
-        console.log("width :"+ game.width + " height : " + game.height  );       
+        //console.log("width :"+ game.width + " height : " + game.height  );       
         
         game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
         game.scale.pageAlignHorizontally = true;
@@ -13,9 +13,9 @@ var PreLoaderState = {
         preLoadBg.width = game.width;
 
         var loadingLabel = game.add.text(game.world.centerX ,game.world.centerY + 120, 'loading...',
-            {font: 'bold 50px Courier', fill: '#000000', align:"center"} );
+            {font: 'bold 50px NanumGothic', fill: '#000000', align:"center"} );
         
-        loadingLabel.anchor.set(0.5);
+        loadingLabel.anchor.set(0.4);
 
         // load graphics image
         game.load.image("box", "./image/box.png");
@@ -28,6 +28,8 @@ var PreLoaderState = {
         game.load.image("Stone1", "./image/stone1.png");        
         game.load.image("Stone2", "./image/stone2.png");        
         game.load.image("Stone3", "./image/stone3.png");
+
+        game.load.image("btn_res", "./image/btn_restart.png");
         // load audio assets 
 
 
