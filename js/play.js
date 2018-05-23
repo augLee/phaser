@@ -42,9 +42,9 @@ function func_overlap(k1,k2, i=0)
         }
     }, null, this);    
 
-    if (playerLife < 1) return 1;
+    if (playerLife < 1) return true;
 
-    return 0;
+    return false;
 };
 
 function revival_stone(alive, player, stone, stonearray, velo)
@@ -96,8 +96,11 @@ function levelDesign() {
     score_num++; 
     score_txt.setText("SCORE "+ score_num);
     if (score_num %10 == 0) { 
-        bulletMoveVelo+=10; 
-        console.log(bulletMoveVelo); 
+        //bulletMoveVelo+=10; 
+        Velo_Stone1 += 10;
+        Velo_Stone2 += 10;
+        Velo_Stone3 += 5;
+        //console.log(bulletMoveVelo); 
     }
 }
 
@@ -192,8 +195,8 @@ var playState = {
         func_overlap(bar,stone3);
 
         var check = func_overlap(player,stone1,1);
-        func_overlap(player,stone2,1);
-        func_overlap(player,stone3,1);
+        if(!check) check = func_overlap(player,stone2,1);
+        if(!check) check = func_overlap(player,stone3,1);
 
         player.body.velocity.setTo(0,0);
 
@@ -205,23 +208,9 @@ var playState = {
         }
 
         func_input();
-        //levelDesign();
 
         revival_stone(Alive_stone1, player,stone1,Arr_Stone1, Velo_Stone1);
         revival_stone(Alive_stone2, player,stone2,Arr_Stone2, Velo_Stone2);
         revival_stone(Alive_stone3, player,stone3,Arr_Stone3, Velo_Stone3);
-
-        //bulletAlive = bullet.getFirstExists(false);
-        //bulletArray.length = 0;
-        //
-        //box.forEachAlive(function(bulletAlive){
-        //    bulletArray.push(bulletAlive);
-        //});
-        //if(bulletAlive && bulletArray.length > 0) {
-        //    var Rand = game.rnd.integerInRange(0, bulletArray.length -1);
-        //    var bulletBox = bulletArray[Rand];
-        //    bulletAlive.reset(bulletBox.body.x, bulletBox.body.y);
-        //    game.physics.arcade.moveToObject(bulletAlive, player, bulletMoveVelo);
-        //}
     }
 }
